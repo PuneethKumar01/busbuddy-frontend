@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-import "leaflet/dist/leaflet.css";   // ✅ must be at the very top
+import "leaflet/dist/leaflet.css";
 import "../styles/globals.css";
 
 function MyApp({ Component, pageProps }: AppProps) {
