@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import "leaflet/dist/leaflet.css";
 import type * as Leaflet from "leaflet";
 
+// Dynamically import react-leaflet components (SSR disabled)
 const MapContainer = dynamic(
   async () => (await import("react-leaflet")).MapContainer,
   { ssr: false }
@@ -30,14 +31,17 @@ export default function MapView({ locations }: { locations: LocationItem[] }) {
   // Default center (Mangaluru)
   const [position, setPosition] = useState<[number, number]>([12.8855, 74.8388]);
 
+  // Load Leaflet dynamically on client
   useEffect(() => {
     setMounted(true);
     if (typeof window !== "undefined") {
-      const leaflet = require("leaflet");
-      setL(leaflet);
+      import("leaflet").then((leafletModule) => {
+        setL(leafletModule);
+      });
     }
   }, []);
 
+  // Update map center when locations change
   useEffect(() => {
     if (locations && locations.length > 0) {
       setPosition([locations[0].latitude, locations[0].longitude]);
@@ -47,8 +51,11 @@ export default function MapView({ locations }: { locations: LocationItem[] }) {
   if (!mounted) return <p>Loading map...</p>;
 
   return (
-    // eslint-disable-next-line react/jsx-no-constructed-context-values
-    <MapContainer center={position} zoom={12} style={{ height: "500px", width: "100%" }}>
+    <MapContainer
+      center={position}
+      zoom={12}
+      style={{ height: "500px", width: "100%" }}
+    >
       <TileLayer
         attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -64,13 +71,20 @@ export default function MapView({ locations }: { locations: LocationItem[] }) {
               <div style="width:22px;height:22px;background:blue;border-radius:50%;border:2px solid white;box-shadow:0 0 6px rgba(0,0,0,0.4);"></div>
             </div>
           `;
+
           const customIcon = L.divIcon({
             className: "custom-marker",
             html,
             iconAnchor: [11, 22],
           });
 
-          return <Marker key={i} position={[loc.latitude, loc.longitude]} icon={customIcon} />;
+          return (
+            <Marker
+              key={i}
+              position={[loc.latitude, loc.longitude]}
+              icon={customIcon}
+            />
+          );
         })}
     </MapContainer>
   );

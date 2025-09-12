@@ -1,8 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-  baseURL: "https://busbuddy-backend-c6dg.onrender.com/api",
-  //"http://localhost:4000/api", // Backend URL
+  baseURL: process.env.NEXT_PUBLIC_API_URL, // ✅ correct name
 });
 
 export default API;

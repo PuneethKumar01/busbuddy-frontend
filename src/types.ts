@@ -15,7 +15,7 @@ export interface Route {
 
 export interface Location {
   _id?: string;
-  bus?: any;
+  bus?: Bus; // 🔧 replaced `any` with Bus
   latitude: number;
   longitude: number;
   timestamp?: string;
@@ -48,4 +48,3 @@ export interface LocationResponse {
   timestamp: string;
   busNumber?: string;
 }
-
