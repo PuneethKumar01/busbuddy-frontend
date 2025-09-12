@@ -31,3 +31,21 @@ export interface Bus {
   route?: Route;
   currentLocation?: Location;
 }
+
+export interface LocationResponse {
+  _id: string;
+  bus?: {
+    _id: string;
+    busNumber?: string;
+    route?: {
+      _id: string;
+      startLocation: string;
+      endLocation: string;
+    };
+  } | null;
+  latitude: number;
+  longitude: number;
+  timestamp: string;
+  busNumber?: string;
+}
+

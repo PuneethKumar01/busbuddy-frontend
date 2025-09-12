@@ -3,7 +3,7 @@ import API from "../api/api";
 import SearchForm from "../components/SearchForm";
 import BusList from "../components/BusList";
 import MapView from "../components/MapView";
-import { Bus, Location } from "../types";
+import { Bus, Location, LocationResponse } from "../types";
 
 const Home: React.FC = () => {
   const [buses, setBuses] = useState<Bus[]>([]);
@@ -24,14 +24,15 @@ const Home: React.FC = () => {
       try {
         const res = await API.get("/location/latest");
         // transform server aggregate shape to Location[] with busNo if available
-        const data = res.data.map((item: any) => ({
-          _id: item._id,
-          bus: item.bus || item.bus?._id,
-          latitude: item.latitude,
-          longitude: item.longitude,
-          timestamp: item.timestamp,
-          busNo: item.bus?.busNumber || (item.busNumber || ""),
-        }));
+        const data = res.data.map((item: LocationResponse) => ({
+  _id: item._id,
+  bus: item.bus?._id, // ensure it's safe
+  latitude: item.latitude,
+  longitude: item.longitude,
+  timestamp: item.timestamp,
+  busNo: item.bus?.busNumber || item.busNumber || "",
+}));
+
         setLocations(data);
       } catch (err) {
         console.error("Location fetch error:", err);

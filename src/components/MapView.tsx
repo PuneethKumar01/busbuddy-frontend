@@ -2,6 +2,7 @@
 import dynamic from "next/dynamic";
 import { useEffect, useState } from "react";
 import "leaflet/dist/leaflet.css";
+import type * as Leaflet from "leaflet";
 
 const MapContainer = dynamic(
   async () => (await import("react-leaflet")).MapContainer,
@@ -24,7 +25,7 @@ interface LocationItem {
 
 export default function MapView({ locations }: { locations: LocationItem[] }) {
   const [mounted, setMounted] = useState(false);
-  const [L, setL] = useState<any>(null);
+  const [L, setL] = useState<typeof Leaflet | null>(null);
 
   // Default center (Mangaluru)
   const [position, setPosition] = useState<[number, number]>([12.8855, 74.8388]);
